@@ -1,0 +1,201 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>User Registration System</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <style>
+       @@media only screen and (max-width: 600px) {
+    #card {
+        width: 100%; /* Make it take the full width of the screen */
+        max-width: 100%; /* Ensure it doesn't exceed the screen width */
+        height: auto;
+       background-color:black; 
+       min-height:650px;
+       margin-bottom:50px;
+    }
+}
+    </style>
+</head>
+<body style="background-color:lightblue">
+    <div id="card" class="container mt-5" style="height:500px;width:600px; background-color:black; margin-top:50px; border-radius:5px;">
+        <h2 style="text-align:center; color:white;">User Registration</h2>
+        <div class="row" style="margin-top:10px;">
+            <div class="col-md-4">
+                <label style="color:white; margin-left:10px;" for="user_id">User Id: </label>
+            </div>
+            <div class="col-md-8">
+                <input id="user_id" type="text" class="form-control">
+            </div>
+        </div>
+        <div class="row" style="margin-top:10px;">
+            <div class="col-md-4">
+                <label style="color:white; margin-left:10px;" for="name">Name: </label>
+            </div>
+            <div class="col-md-8">
+                <input id="name" type="text" class="form-control">
+            </div>
+        </div>
+        <div class="row" style="margin-top:10px;">
+            <div class="col-md-4">
+                <label style="color:white; margin-left:10px;" for="email">Email: </label>
+            </div>
+            <div class="col-md-8">
+                <input id="email" type="email" class="form-control">
+            </div>
+        </div>
+        <div class="row" style="margin-top:10px;">
+            <div class="col-md-4">
+                <label style="color:white; margin-left:10px;" for="mobile_no">Mobile Number: </label>
+            </div>
+            <div class="col-md-8">
+                <input id="phone_no" type="number" class="form-control">
+            </div>
+        </div>
+        <div class="row" style="margin-top:10px;">
+            <div class="col-md-4">
+                <label style="color:white; margin-left:10px;" for="address">Address: </label>
+            </div>
+            <div class="col-md-8">
+                <textarea id="address" type="text" class="form-control"></textarea>
+            </div>
+        </div>
+        <div class="row" style="margin-top:10px;">
+            <div class="col-md-4">
+                <label style="color:white; margin-left:10px;" for="password">Password: </label>
+            </div>
+            <div class="col-md-8">
+                <input id="password" type="password" class="form-control">
+            </div>
+        </div>
+        <div class="row" style="margin-top:10px;">
+            <div class="col-md-4">
+                <label style="color:white; margin-left:10px;" for="confirm_password">Confirm Password: </label>
+            </div>
+            <div class="col-md-8">
+                <input id="confirm_password" type="password" class="form-control">
+            </div>
+        </div>
+        <div class="row" style="margin-top:10px;">
+            <div class="col-md-4">
+
+            </div>
+            <div class="col-md-8">
+                <input id="btn_registration" type="submit" value="Register" class="btn btn-warning">
+            </div>
+        </div>
+    </div>
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script>
+        $("#btn_registration").click("click", function () {
+            var userName = $("#name").val();
+            var password = $("#password").val(); 
+            var email = $("#email").val();
+            var valided = 0;
+            if ($("#user_id").val() == "") {
+                alert("Please Enter User ID.");
+                $("#user_id").focus();
+                valided = 1;
+                return;
+            }
+            if ($("#name").val() == "") {
+                alert("Please Enter User Name.");
+                $("#name").focus();
+                valided = 1;
+                return;
+            }
+            if ($("#email").val() == "") {
+                alert("Please Enter User Email.");
+                $("#email").focus();
+                valided = 1;
+                return;
+            }
+            if ($("#phone_no").val() == "") {
+                alert("Please Enter User Mobile Number.");
+                $("#phone_no").focus();
+                valided = 1;
+                return;
+            }
+            if ($("#address").val() == "") {
+                alert("Please Enter User Address.");
+                $("#address").focus();
+                valided = 1;
+                return;
+            }
+            if ($("#password").val() == "") {
+                alert("Please Enter User password.");
+                $("#password").focus();
+                valided = 1;
+                return;
+            }
+            if ($("#password").val() != $("#confirm_password").val()) {
+                alert("Password does not match...");
+                $("#confirm_password").focus();
+                valided = 1;
+                return;
+            }
+            var usernameRegex = /^[a-zA-Z0-9]{6,}$/;
+            if (!usernameRegex.test(userName)) {
+                alert("Username must be at least 6 characters long and contain only letters and numbers.");
+                $("#name").focus();
+                valided = 1;
+                return;
+            }
+            if (password.length < 8) {
+                alert("Password must be at least 8 characters long.");
+                $("#password").focus();
+                valided = 1;
+                return;
+            }
+            var emailRegex = /^[\w-]+(\.[\w-]+)*@@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+            if (!emailRegex.test(email)) {
+                alert("Please enter a valid email address ending with '.com'.");
+                $("#email").focus();
+                valided = 1;
+                return;
+            }
+            if (valided == 0) {
+                var user = {
+                    user_id: $("#user_id").val(),
+                    name: $("#name").val(),
+                    email: $("#email").val(),
+                    mobile_number: $("#phone_no").val(),
+                    address: $("#address").val(),
+                    password: $("#password").val()
+                };
+               // alert(user.name);
+                $.ajax({
+                    type: "POST",
+                    url: "/User/user_registration",
+                    contentType: 'application/json',
+                    data: JSON.stringify(user),
+                    dataType: 'json',
+                    enctype: "multipart/form-data",
+                    success: function (response) {
+                         if (response.success) {
+                             alert(response.message);
+                           
+                         }
+                         else
+                         {
+                             alert(response.message); 
+                        }
+                        window.location.reload();
+                    },
+                    error: function (response) {
+                        alert("Error");
+                    }
+
+                });
+            }
+        });
+    </script>
+</body>
+</html>
